@@ -1,7 +1,5 @@
-Hyperledger Fabric Chaincode Fuzzing Toolkit
 
-Инструкция по установке и использованию инструментов для фаззинга смарт-контрактов Hyperledger Fabric с помощью go-fuzz-hf.
-Установка утилит
+Инструкция по установке и использованию инструментов для фаззинга смарт-контрактов Hyperledger Fabric
 # Установить генератор сидов (manifestgen)
 go install github.com/ваш/репозиторий/go-fuzz-hf/manifestgen
 
@@ -18,7 +16,7 @@ go install github.com/ваш/репозиторий/go-fuzz-hf/go-fuzz-build
 
 Подготовка к фаззингу
 
-    Перейдите в директорию вашего chaincode‑харнесса (где находится fuzz.go):
+    Перейдите в директорию вашего сhaincode‑харнесса (где находится fuzz.go):
     cd ~/hfuzz/atb/fuzz
 
     Создайте manifest.json с примером функций и их аргументов:
