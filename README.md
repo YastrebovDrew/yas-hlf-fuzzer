@@ -1,16 +1,16 @@
 
 Инструкция по установке и использованию инструментов для фаззинга смарт-контрактов Hyperledger Fabric
 # Установить генератор сидов (manifestgen)
-go install github.com/ваш/репозиторий/go-fuzz-hf/manifestgen
+go install go-fuzz-hf/manifestgen
 
 # Установить универсальный генератор корпуса (gen)
-go install github.com/ваш/репозиторий/go-fuzz-hf/gen
+go install go-fuzz-hf/gen
 
 # Установить кастомный билд-скрипт go-fuzz
-go install github.com/ваш/репозиторий/go-fuzz-hf/go-fuzz
+go install go-fuzz-hf/go-fuzz
 
 # Установить кастомный билд-пакер go-fuzz-build
-go install github.com/ваш/репозиторий/go-fuzz-hf/go-fuzz-build
+go install go-fuzz-hf/go-fuzz-build
 
     Убедитесь, что $GOPATH/bin добавлен в ваш $PATH.
 
