@@ -19,10 +19,10 @@ go install go-fuzz-hf/go-fuzz-build
     Перейдите в директорию вашего сhaincode‑харнесса (где находится fuzz.go):
     cd ~/hfuzz/atb/fuzz
 
-    Создайте manifest.json с примером функций и их аргументов:
+    Создайте manifest.json:
     manifestgen -out=.
 
-    Отредактируйте manifest.json под ваш контракт, указав все публичные транзакции и диапазоны значений аргументов.
+    Отредактируйте manifest.json под ваш контракт, указав все функции и диапазоны значений аргументов.
 
     Сгенерируйте сиды (corpus):
     gen -manifest=manifest.json -out=corpus -limit=300
@@ -40,7 +40,7 @@ go install go-fuzz-hf/go-fuzz-build
     Соберите бинарник фузз‑теста:
     go-fuzz-build -preserve=crypto/internal/bigmod -o atb-fuzz.zip
 
-    Опция -preserve необходима для исключения конфликтов символов в internal.
+        Опция -preserve необходима для исключения конфликтов символов в internal.
 
     Запустите фуззер:
     go-fuzz -bin=atb-fuzz.zip -procs=1
