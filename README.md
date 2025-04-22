@@ -1,16 +1,18 @@
 
 Инструкция по установке и использованию инструментов для фаззинга смарт-контрактов Hyperledger Fabric
+# Переходим в папку фаззера
+cd /go-fuzz-hf
 # Создать бинарник для генератора манифеста (manifestgen)
-go install go-fuzz-hf/manifestgen
+go install ./manifestgen
 
 # Создать бинарник для генератора начального корпуса (gen)
-go install go-fuzz-hf/gen
+go install ./gen
 
 # Создать бинарник go-fuzz
-go install go-fuzz-hf/go-fuzz
+go install ./go-fuzz
 
 # Создать бинарник билд-пакера go-fuzz-build
-go install go-fuzz-hf/go-fuzz-build
+go install ./go-fuzz-build
 
     Убедитесь, что $GOPATH/bin добавлен в ваш $PATH.
 
