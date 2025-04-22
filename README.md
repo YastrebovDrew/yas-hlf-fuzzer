@@ -1,7 +1,7 @@
 
 Инструкция по установке и использованию инструментов для фаззинга смарт-контрактов Hyperledger Fabric
 # Переходим в папку фаззера
-cd /go-fuzz-hf
+cd ~/yas-hlf-fuzzer/go-fuzz-hf
 # Создать бинарник для генератора манифеста (manifestgen)
 go install ./manifestgen
 
@@ -19,7 +19,7 @@ go install ./go-fuzz-build
 Подготовка к фаззингу
 
     Перейдите в директорию вашего сhaincode‑харнесса (где находится fuzz.go):
-    cd ~/hfuzz/atb/fuzz
+    cd ~/yas-hlf-fuzzer/atb/fuzz
 
     Создайте manifest.json:
     manifestgen -out=.
