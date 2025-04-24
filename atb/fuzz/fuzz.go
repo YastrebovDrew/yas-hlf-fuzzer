@@ -1,7 +1,7 @@
 //go:build gofuzz
 // +build gofuzz
 
-//sasass
+
 
 package fuzz
 
