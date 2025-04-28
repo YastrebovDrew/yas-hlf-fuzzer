@@ -40,13 +40,11 @@ go install ./go-fuzz-build
 Сборка и запуск go-fuzz
 
     Соберите бинарник фузз‑теста:
-    go-fuzz-build -preserve=crypto/internal/bigmod -o atb-fuzz.zip
+    go-fuzz-build -tags=purego  -o atb-fuzz.zip
 
-        Опция -preserve необходима для исключения конфликтов символов в internal.
+        Опция -tags=purego заставит компилятор игнорировать nat_asm.go и собрать «чисто-Go» реализацию. 
 
     Запустите фуззер:
-    go-fuzz -bin=atb-fuzz.zip -procs=1
+    go-fuzz -bin=atb-fuzz.zip -procs=4
 
-        -procs=1 отключает параллельные гонки и защищает внутренний sonar от ошибок.
-Удачного фаззинга!
 
