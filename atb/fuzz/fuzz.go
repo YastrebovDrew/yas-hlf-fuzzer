@@ -1,7 +1,7 @@
 //go:build gofuzz
 // +build gofuzz
 
-//sasass
+
 
 package fuzz
 
@@ -23,7 +23,7 @@ var (
 )
 
 func initStub() {
-	// ваша инициализация остаётся без изменений
+	
 	cc, err := contractapi.NewChaincode(new(cc.SmartContract))
 	if err != nil {
 		panic(err)
