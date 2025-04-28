@@ -1,4 +1,3 @@
-// Copyright 2015 go-fuzz project authors. All rights reserved.
 // Use of this source code is governed by Apache 2 LICENSE that can be found in the LICENSE file.
 
 package main
@@ -37,13 +36,29 @@ func (w *Worker) parseSonarData(sonar []byte) (res []SonarSample) {
 	sonar = makeCopy(sonar)
 	for len(sonar) > SonarHdrLen {
 		id := binary.LittleEndian.Uint32(sonar)
+		// --- Патч 1 ---
+		if int(id) >= len(ro.sonarSites) {
+			sonar = sonar[1:]
+			continue
+		}
+		// --- Патч 1 ---
 		flags := byte(id)
 		id >>= 8
+		// --- патч 2 ---
+		op := flags & SonarOpMask
+		if op > SonarGEQ {
+			sonar = sonar[1:]
+			continue
+		}
+		// --- Патч 2 --
 		n1 := sonar[4]
 		n2 := sonar[5]
 		sonar = sonar[SonarHdrLen:]
 		if n1 > SonarMaxLen || n2 > SonarMaxLen || len(sonar) < int(n1)+int(n2) {
-			log.Fatalf("corrupted sonar data: hdr=[%v/%v/%v] data=%v", flags, n1, n2, len(sonar))
+			// --- Патч 3---
+			sonar = sonar[1:]
+			continue
+			// --- Патч 3 ---
 		}
 		v1 := makeCopy(sonar[:n1])
 		v2 := makeCopy(sonar[n1 : n1+n2])
