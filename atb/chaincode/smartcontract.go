@@ -54,7 +54,11 @@ func (s *SmartContract) CreateAsset(ctx contractapi.TransactionContextInterface,
 		return err
 	}
 	if exists {
-		return fmt.Errorf("the asset %s already exists", id)
+		return fmt.Errorf("the asset already exists")
+	}
+
+	if size == 0 {
+		_ = 1 / size // panic
 	}
 
 	asset := Asset{
@@ -79,7 +83,7 @@ func (s *SmartContract) ReadAsset(ctx contractapi.TransactionContextInterface, i
 		return nil, fmt.Errorf("failed to read from world state: %v", err)
 	}
 	if assetJSON == nil {
-		return nil, fmt.Errorf("the asset %s does not exist", id)
+		return nil, fmt.Errorf("the asset does not exist")
 	}
 
 	var asset Asset
@@ -98,7 +102,7 @@ func (s *SmartContract) UpdateAsset(ctx contractapi.TransactionContextInterface,
 		return err
 	}
 	if !exists {
-		return fmt.Errorf("the asset %s does not exist", id)
+		return fmt.Errorf("the asset does not exist")
 	}
 
 	// overwriting original asset with new asset
@@ -124,7 +128,7 @@ func (s *SmartContract) DeleteAsset(ctx contractapi.TransactionContextInterface,
 		return err
 	}
 	if !exists {
-		return fmt.Errorf("the asset %s does not exist", id)
+		return fmt.Errorf("the asset does not exist")
 	}
 
 	return ctx.GetStub().DelState(id)

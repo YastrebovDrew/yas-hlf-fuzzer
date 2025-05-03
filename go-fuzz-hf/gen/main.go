@@ -1,90 +1,127 @@
-// ddd
 package main
 
 import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 )
 
+// -----------------------------------------------------------------------------
+// флаги
+// -----------------------------------------------------------------------------
+var (
+	manifestPath = flag.String("manifest", "", "path to manifest.json")
+	outDir       = flag.String("out", "corpus", "directory for seed files")
+	limitTotal   = flag.Int("limit", 0, "max total files (0 = unlimited)")
+	limitPerFunc = flag.Int("limit-per-func", 0, "max files per function (0 = unlimited)")
+	format       = flag.String("format", "pipe", "seed format: pipe|json")
+)
+
+// -----------------------------------------------------------------------------
+// структура манифеста
+// -----------------------------------------------------------------------------
 type Manifest struct {
-	Functions []Function `json:"functions"`
+	Functions []struct {
+		Name string     `json:"name"`
+		Args [][]string `json:"args"`
+	} `json:"functions"`
 }
 
-type Function struct {
-	Name string     `json:"name"`
-	Args [][]string `json:"args"`
-}
-
+// -----------------------------------------------------------------------------
+// main
+// -----------------------------------------------------------------------------
 func main() {
-	manifestPath := flag.String("manifest", "manifest.json", "Путь к manifest.json")
-	outDir := flag.String("out", "corpus", "Каталог для сидов")
-	limit := flag.Int("limit", 200, "Максимум файлов на функцию")
 	flag.Parse()
-
-	raw, err := ioutil.ReadFile(*manifestPath)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Ошибка чтения %s: %v\n", *manifestPath, err)
-		os.Exit(1)
+	if *manifestPath == "" {
+		fail("flag -manifest is required")
 	}
-	var m Manifest
-	if err := json.Unmarshal(raw, &m); err != nil {
-		fmt.Fprintf(os.Stderr, "Ошибка разбора %s: %v\n", *manifestPath, err)
-		os.Exit(1)
-	}
+	raw, err := os.ReadFile(*manifestPath)
+	check(err)
 
-	if err := os.MkdirAll(*outDir, 0755); err != nil {
-		fmt.Fprintf(os.Stderr, "Ошибка создания %s: %v\n", *outDir, err)
-		os.Exit(1)
-	}
+	var mf Manifest
+	check(json.Unmarshal(raw, &mf))
 
-	idx := 0
-	for _, fn := range m.Functions {
-		combos := generateCombos(fn.Name, fn.Args, *limit)
-		for _, combo := range combos {
-			fname := fmt.Sprintf("%04d_%s", idx, fn.Name)
-			path := filepath.Join(*outDir, fname)
-			if err := ioutil.WriteFile(path, []byte(combo), 0644); err != nil {
-				panic(fmt.Sprintf("Не могу записать %s: %v", path, err))
+	check(os.MkdirAll(*outDir, 0o755))
+
+	total := 0
+	index := 0
+	for _, fn := range mf.Functions {
+		count := 0
+		emit := func(payload []string) {
+			// respect per-func лимит
+			if *limitPerFunc > 0 && count >= *limitPerFunc {
+				return
 			}
-			idx++
+			// respect глобальный лимит
+			if *limitTotal > 0 && total >= *limitTotal {
+				return
+			}
+			file := filepath.Join(*outDir, fmt.Sprintf("%06d_%s", index, fn.Name))
+			writeSeed(file, payload)
+			index++
+			count++
+			total++
 		}
+		product(fn.Name, fn.Args, emit)
 	}
-	fmt.Printf("Сгенерировано %d сидов в '%s'\n", idx, *outDir)
+	fmt.Printf("generated %d files in %s (%s format)\n", total, *outDir, *format)
 }
 
-func generateCombos(fnName string, args [][]string, limit int) []string {
-	if len(args) == 0 {
-		return []string{fnName}
-	}
-	var res []string
-	current := make([]string, len(args))
-	count := 0
-	var dfs func(int)
-	dfs = func(pos int) {
-		if count >= limit {
+// -----------------------------------------------------------------------------
+// рекурсивно строим декартово произведение
+// -----------------------------------------------------------------------------
+func product(name string, matrix [][]string, emit func([]string)) {
+	var recur func(int, []string)
+	recur = func(i int, acc []string) {
+		if i == len(matrix) {
+			emit(append([]string{name}, acc...))
 			return
 		}
-		if pos == len(args) {
-			combo := fnName
-			for _, v := range current {
-				combo += "\x00" + v
-			}
-			res = append(res, combo)
-			count++
-			return
-		}
-		for _, val := range args[pos] {
-			if count >= limit {
-				break
-			}
-			current[pos] = val
-			dfs(pos + 1)
+		for _, v := range matrix[i] {
+			recur(i+1, append(acc, v))
 		}
 	}
-	dfs(0)
-	return res
+	recur(0, nil)
+}
+
+// -----------------------------------------------------------------------------
+// запись сида
+// -----------------------------------------------------------------------------
+func writeSeed(path string, parts []string) {
+	f, err := os.Create(path)
+	check(err)
+	defer f.Close()
+
+	switch *format {
+	case "json":
+		b, _ := json.Marshal(parts)
+		f.Write(b)
+
+	case "pipe":
+		for i, p := range parts {
+			if i > 0 {
+				io.WriteString(f, "|")
+			}
+			io.WriteString(f, p)
+		}
+
+	default:
+		fail("unknown -format; use pipe or json")
+	}
+}
+
+// -----------------------------------------------------------------------------
+// util
+// -----------------------------------------------------------------------------
+func check(err error) {
+	if err != nil {
+		fail(err.Error())
+	}
+}
+func fail(msg string) {
+	fmt.Fprintln(os.Stderr, "error:", msg)
+	os.Exit(1)
 }

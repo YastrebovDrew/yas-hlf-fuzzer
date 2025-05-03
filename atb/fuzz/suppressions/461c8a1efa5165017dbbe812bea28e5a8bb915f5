@@ -1,0 +1,10 @@
+panic: runtime error: integer divide by zero
+github.com/hyperledger/fabric-samples/asset-transfer-basic/chaincode-go/chaincode.(*SmartContract).CreateAsset
+reflect.Value.call
+reflect.Value.Call
+github.com/hyperledger/fabric-contract-api-go/internal.ContractFunction.Call
+github.com/hyperledger/fabric-contract-api-go/contractapi.(*ContractChaincode).Invoke
+github.com/hyperledger/fabric-chaincode-go/shimtest.(*MockStub).MockInvoke
+atb-fuzz.Fuzz
+go-fuzz-dep.Main
+main.main

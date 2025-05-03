@@ -1,0 +1,22 @@
+panic: runtime error: integer divide by zero
+
+goroutine 1 [running]:
+github.com/hyperledger/fabric-samples/asset-transfer-basic/chaincode-go/chaincode.(*SmartContract).CreateAsset(0xc0002e0a20?, {0x7397a04c6478, 0xc0002e0a20}, {0x0, 0x0}, {0x0, 0x0}, 0x0, {0x0, 0x0}, ...)
+	/home/andrey/hfuzz/atb/chaincode/smartcontract.go:61 +0x2f2
+reflect.Value.call({0xd77d80?, 0xc000176630?, 0x0?}, {0xdaba49, 0x4}, {0xc000188300, 0x6, 0x412025?})
+	/usr/local/go/src/reflect/value.go:581 +0x1245
+reflect.Value.Call({0xd77d80?, 0xc000176630?, 0x5?}, {0xc000188300, 0x6, 0x8})
+	/usr/local/go/src/reflect/value.go:365 +0xad
+github.com/hyperledger/fabric-contract-api-go/internal.ContractFunction.Call({{0xd77d80, 0xc000176630, 0x613}, 0x1, {{0xeab3d8, 0xcfebc0}, {0xc0001cef80, 0x5, 0x8}}, {{0x0, ...}, ...}}, ...)
+	/home/andrey/go/pkg/mod/github.com/hyperledger/fabric-contract-api-go@v1.2.2/internal/contract_function.go:59 +0x211
+github.com/hyperledger/fabric-contract-api-go/contractapi.(*ContractChaincode).Invoke(0xc0001ced00, {0xeab660, 0xc000188240})
+	/home/andrey/go/pkg/mod/github.com/hyperledger/fabric-contract-api-go@v1.2.2/contractapi/contract_chaincode.go:229 +0xf9b
+github.com/hyperledger/fabric-chaincode-go/shimtest.(*MockStub).MockInvoke(0xc000188240, {0xdadee5?, 0x476152?}, {0xc0002d18c0?, 0x9?, 0x9?})
+	/home/andrey/go/pkg/mod/github.com/hyperledger/fabric-chaincode-go@v0.0.0-20240704073638-9fb89180dc17/shimtest/mockstub.go:158 +0xc2
+atb-fuzz.Fuzz({0x7397a0210000, 0x10, 0x10})
+	/home/andrey/hfuzz/atb/fuzz/fuzz.go:119 +0x8fd
+go-fuzz-dep.Main({0xc0000c9f38, 0x1, 0x1382da8?})
+	go-fuzz-dep/main.go:36 +0x14c
+main.main()
+	atb-fuzz/go.fuzz.main/main.go:15 +0x2c
+exit status 2
