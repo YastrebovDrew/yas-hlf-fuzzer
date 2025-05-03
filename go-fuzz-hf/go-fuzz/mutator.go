@@ -57,7 +57,7 @@ func (m *Mutator) mutate(data []byte, ro *ROData) []byte {
 		var id int
 		for {
 			id = m.rand(20)
-			if id != 1 && id != 19 {
+			if id != 1 && id != 19 && id != 18 {
 				break
 			}
 		}

@@ -1,0 +1,10 @@
+panic: the asset does not exist
+
+goroutine 1 [running]:
+atb-fuzz.Fuzz({0x765fc1c10000, 0xa, 0xa})
+	/home/andrey/hfuzz/atb/fuzz/fuzz.go:128 +0xa1c
+go-fuzz-dep.Main({0xc0005f5f38, 0x1, 0x1382da8?})
+	go-fuzz-dep/main.go:36 +0x14c
+main.main()
+	atb-fuzz/go.fuzz.main/main.go:15 +0x2c
+exit status 2
