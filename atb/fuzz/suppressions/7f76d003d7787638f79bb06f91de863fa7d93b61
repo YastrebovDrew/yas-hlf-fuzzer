@@ -1,4 +1,0 @@
-panic: the asset does not exist
-atb-fuzz.Fuzz
-go-fuzz-dep.Main
-main.main
