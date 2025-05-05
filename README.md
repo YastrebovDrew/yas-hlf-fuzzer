@@ -27,7 +27,7 @@ go install ./go-fuzz-build
     Отредактируйте manifest.json под ваш контракт, указав все функции и диапазоны значений аргументов.
 
     Сгенерируйте сиды (corpus):
-    gen -manifest=manifest.json -out=corpus -limit=300
+    gen -manifest=manifest.json -out=corpus -limit=300 -limit-per-func=40
 
     Здесь:
 
@@ -37,10 +37,12 @@ go install ./go-fuzz-build
 
         -limit — максимум сидов на каждую функцию (по умолчанию 200).
 
+        -limit-per-func — максимум сидов на одну функцию
+
 Сборка и запуск go-fuzz
 
     Соберите бинарник фузз‑теста:
-    go-fuzz-build -tags=purego  -o atb-fuzz.zip
+    go-fuzz-build -tags=purego  -o chaincode-fuzz.zip
 
         Опция -tags=purego заставит компилятор игнорировать nat_asm.go и собрать «чисто-Go» реализацию. 
 
