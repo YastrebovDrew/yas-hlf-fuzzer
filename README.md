@@ -3,7 +3,7 @@
 # Переходим в папку фаззера
 cd ~/yas-hlf-fuzzer/go-fuzz-hf
 # Создать бинарник для генератора манифеста (manifestgen)
-go install ./gen
+go install ./manifestgen
 
 # Создать бинарник для генератора начального корпуса (gen)
 go install ./gen
